@@ -570,6 +570,8 @@
     .secondary-button:hover { background: #f7f8f4; }
     .secondary-button svg { width: 14px; height: 14px; }
     .result-actions { display: flex; gap: 8px; }
+    .result-actions a { text-decoration: none; }
+    .report-hint { margin: 8px 0 0; color: #858d87; font-size: 10px; line-height: 1.5; }
 
     .notice {
       position: fixed;
@@ -869,6 +871,10 @@
         <div class="result-bottom">
           <span class="save-status">Marca los pasos a medida que avances en tu investigación.</span>
           <div class="result-actions">
+            <div>
+              <a class="secondary-button" id="open-report" href="#" target="_blank" rel="noopener noreferrer">Abrir ficha en nueva ventana</a>
+              <p class="report-hint">El enlace incluye los datos de la ficha; evita compartirlo si contiene información sensible.</p>
+            </div>
             <button class="secondary-button" type="button" id="copy-button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"></path>
@@ -894,6 +900,7 @@
       const form = document.getElementById("verification-form");
       const assessmentForm = document.getElementById("assessment-form");
       const resultCard = document.getElementById("result-card");
+      const reportLink = document.getElementById("open-report");
       const notice = document.getElementById("notice");
       const fields = {
         url: document.getElementById("post-url"),
@@ -920,6 +927,7 @@
           checks: Object.fromEntries(checkboxes.map((checkbox) => [checkbox.dataset.check, checkbox.checked])),
           origins: state.origins,
           coverage: state.coverage,
+          orientationSummary: document.getElementById("orientation-summary").textContent,
           assessment: {
             status: assessmentForm.elements.status.value,
             evidence: assessmentForm.elements.evidence.value,
@@ -937,6 +945,7 @@
         } catch (error) {
           document.getElementById("save-status").textContent = "No se pudo guardar en este dispositivo.";
         }
+        updateReportLink();
       }
 
       function updateProgress() {
@@ -954,6 +963,17 @@
         } catch (error) {
           return "";
         }
+      }
+
+      function updateReportLink() {
+        const report = readState();
+        if (!report.claim.trim()) {
+          reportLink.removeAttribute("href");
+          return;
+        }
+        const reportUrl = new URL("ficha-verificacion.html", window.location.href);
+        reportUrl.hash = JSON.stringify(report);
+        reportLink.href = reportUrl.href;
       }
 
       function appendLink(container, value, label) {
@@ -1117,6 +1137,7 @@
         const claim = fields.claim.value.trim();
         if (!claim) {
           resultCard.classList.remove("visible");
+          updateReportLink();
           return;
         }
         document.getElementById("result-claim").textContent = claim;
@@ -1127,6 +1148,7 @@
         resultCard.classList.add("visible");
         updateProgress();
         renderResearch();
+        updateReportLink();
       }
 
       function showNotice(message) {
@@ -1302,7 +1324,7 @@
           report.assessment.notes ? `Justificación: ${report.assessment.notes}` : "",
           "",
           "LISTA DE COMPROBACIÓN",
-          ...checkboxes.map((checkbox) => `${checkbox.checked ? "[x]" : "[ ]"} ${checkbox.querySelector("span").textContent}`),
+          ...checkboxes.map((checkbox) => `${checkbox.checked ? "[x]" : "[ ]"} ${checkbox.closest(".check-item").querySelector("span").textContent}`),
           "",
           "Nota: registro editorial basado en fuentes añadidas por el usuario; no es una determinación automática de veracidad ni de intención."
         ].filter((line) => line !== undefined);
@@ -1331,6 +1353,7 @@
         resultCard.classList.remove("visible");
         updateProgress();
         renderResearch();
+        updateReportLink();
         if (document.getElementById("save-status").textContent !== "Ficha vaciada, pero no se pudo borrar el almacenamiento local.") {
           document.getElementById("save-status").textContent = "Los cambios se guardan automáticamente.";
         }
