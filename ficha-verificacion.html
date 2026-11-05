@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="description" content="Ficha de verificación periodística de Redacción.">
+  <title>Ficha de verificación — Redacción</title>
+  <style>
+    :root {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #17241f;
+      background: #f5f4ef;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+
+    body { margin: 0; padding: 38px 18px; }
+
+    .sheet {
+      width: min(820px, 100%);
+      margin: 0 auto;
+      padding: 38px;
+      border: 1px solid #e6e7df;
+      border-radius: 12px;
+      background: #fffefa;
+      box-shadow: 0 12px 40px rgb(34 48 39 / 6%);
+    }
+
+    .topline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid #e6e7df;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: #245b45;
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
+    h1 { margin: 8px 0; font-size: 32px; letter-spacing: -.7px; }
+    h2 { margin: 28px 0 11px; font-size: 21px; }
+
+    .meta, footer { color: #737c76; font-size: 11px; line-height: 1.6; }
+    .meta { margin: 0; }
+
+    .actions { display: flex; flex: 0 0 auto; gap: 8px; }
+    .button {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 11px;
+      border: 1px solid #dfe2d9;
+      border-radius: 5px;
+      background: #fff;
+      color: #455249;
+      font: inherit;
+      font-size: 11px;
+      font-weight: 650;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button:hover { background: #f7f8f4; }
+
+    blockquote {
+      margin: 22px 0;
+      padding: 15px 18px;
+      border-left: 3px solid #8da78f;
+      background: #f6f7f2;
+      color: #46534a;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    p, li { font-size: 13px; line-height: 1.65; }
+    .details p { margin: 6px 0; }
+    strong { color: #344139; }
+    a { color: #245b45; overflow-wrap: anywhere; }
+    ul { padding-left: 22px; }
+    li { padding: 5px 0; }
+    li p { margin: 5px 0 0; color: #626c65; }
+    .empty { color: #737c76; font-size: 12px; }
+
+    .notice {
+      margin: 24px 0 18px;
+      padding: 13px 15px;
+      border-left: 3px solid #c79a55;
+      background: #fbf7ee;
+      color: #786b56;
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    footer { padding-top: 15px; border-top: 1px solid #e6e7df; }
+
+    @media (max-width: 600px) {
+      body { padding: 16px 10px; }
+      .sheet { padding: 23px 18px; }
+      .topline { flex-direction: column; }
+      .actions { width: 100%; }
+      .actions > * { flex: 1; }
+    }
+
+    @media print {
+      body { padding: 0; background: #fff; }
+      .sheet { width: 100%; max-width: none; padding: 10px; border: 0; border-radius: 0; box-shadow: none; }
+      .actions { display: none; }
+      a { color: inherit; text-decoration: none; }
+      a[href]::after { content: " (" attr(href) ")"; font-size: 9px; overflow-wrap: anywhere; }
+      h2 { break-after: avoid; }
+      li, blockquote { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="topline">
+      <div>
+        <p class="eyebrow">Redacción · Verificación digital</p>
+        <h1>Ficha de verificación</h1>
+        <p class="meta" id="generated-at"></p>
+      </div>
+      <div class="actions">
+        <a class="button" href="index.html">Volver a la herramienta</a>
+        <button class="button" id="print-button" type="button">Imprimir / Guardar PDF</button>
+      </div>
+    </header>
+
+    <section aria-labelledby="claim-heading">
+      <h2 id="claim-heading">Afirmación analizada</h2>
+      <blockquote id="claim"></blockquote>
+      <div class="details" id="claim-details"></div>
+    </section>
+
+    <section aria-labelledby="origin-heading">
+      <h2 id="origin-heading">Rastro y redistribución</h2>
+      <ul id="origin-list"></ul>
+    </section>
+
+    <section aria-labelledby="coverage-heading">
+      <h2 id="coverage-heading">Comparación entre medios</h2>
+      <ul id="coverage-list"></ul>
+      <p class="meta" id="orientation-summary"></p>
+    </section>
+
+    <section aria-labelledby="assessment-heading">
+      <h2 id="assessment-heading">Evaluación editorial</h2>
+      <div class="details" id="assessment"></div>
+    </section>
+
+    <section aria-labelledby="checklist-heading">
+      <h2 id="checklist-heading">Lista de comprobación</h2>
+      <ul id="checklist"></ul>
+    </section>
+
+    <div class="notice">Esta ficha reúne información y enlaces registrados por el usuario. No verifica automáticamente las fuentes, no determina por sí sola la veracidad ni permite inferir la intención de engañar.</div>
+    <footer>Redacción · Herramienta de apoyo al trabajo periodístico</footer>
+  </main>
+
+  <script>
+    (() => {
+      const checklistItems = [
+        ["origin", "Identifiqué la fuente original y comprobé la fecha de publicación."],
+        ["media", "Comprobé el contexto, el lugar y la fecha de las imágenes o videos."],
+        ["primary", "Consulté fuentes primarias o evidencia documental relevante."],
+        ["independent", "Contrasté la afirmación con fuentes independientes y confiables."],
+        ["uncertainty", "Registré qué no pude confirmar y evité conclusiones más allá de la evidencia."]
+      ];
+      const orientationLabels = [
+        "Izquierda marcada", "Izquierda", "Centroizquierda", "Centroizquierda moderada",
+        "Leve centroizquierda", "Centro", "Leve centroderecha", "Centroderecha moderada",
+        "Centroderecha", "Derecha", "Derecha marcada"
+      ];
+
+      function safeUrl(value) {
+        try {
+          const parsed = new URL(value);
+          return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.href : "";
+        } catch (error) {
+          return "";
+        }
+      }
+
+      function leaningLabel(value) {
+        const score = Number(value);
+        if (!Number.isInteger(score) || score < -5 || score > 5) return "Sin evaluar";
+        return `${orientationLabels[score + 5]} (${score > 0 ? "+" : ""}${score})`;
+      }
+
+      function appendLink(container, value, label) {
+        const href = safeUrl(value);
+        if (!href) return;
+        const link = document.createElement("a");
+        link.href = href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = label;
+        container.append(link);
+      }
+
+      function addDetail(container, label, value, url, linkLabel) {
+        if (!value && !safeUrl(url)) return;
+        const paragraph = document.createElement("p");
+        const strong = document.createElement("strong");
+        strong.textContent = `${label}: `;
+        paragraph.append(strong);
+        if (value) paragraph.append(document.createTextNode(value));
+        if (value && safeUrl(url)) paragraph.append(document.createTextNode(" · "));
+        if (safeUrl(url)) appendLink(paragraph, url, linkLabel);
+        container.append(paragraph);
+      }
+
+      function addEmptyMessage(list, message) {
+        const item = document.createElement("li");
+        item.className = "empty";
+        item.textContent = message;
+        list.append(item);
+      }
+
+      function showReport(report) {
+        if (!report || typeof report !== "object" || typeof report.claim !== "string" || !report.claim.trim()) {
+          throw new Error("La ficha no contiene una afirmación para mostrar.");
+        }
+
+        document.getElementById("generated-at").textContent =
+          `Generada el ${new Intl.DateTimeFormat("es", { dateStyle: "long", timeStyle: "short" }).format(new Date())} · Estado editorial: revisión humana`;
+        document.getElementById("claim").textContent = report.claim;
+        const claimDetails = document.getElementById("claim-details");
+        addDetail(claimDetails, "Red social", report.platform);
+        addDetail(claimDetails, "Fecha de publicación", report.date);
+        addDetail(claimDetails, "Publicación", "", report.url, "Abrir publicación original");
+        addDetail(claimDetails, "Contexto inicial", report.context);
+
+        const originList = document.getElementById("origin-list");
+        const origins = Array.isArray(report.origins) ? report.origins.slice().sort((a, b) =>
+          (a.date || "9999").localeCompare(b.date || "9999")
+        ) : [];
+        origins.forEach((entry) => {
+          const item = document.createElement("li");
+          const title = document.createElement("strong");
+          title.textContent = typeof entry.source === "string" ? entry.source : "Fuente sin nombre";
+          item.append(title, document.createTextNode(` · ${entry.kind || "Tipo no indicado"} · ${entry.date || "Fecha no registrada"} · `));
+          appendLink(item, entry.url, "Ver fuente");
+          const notes = document.createElement("p");
+          notes.textContent = entry.notes || "Sin notas adicionales.";
+          item.append(notes);
+          originList.append(item);
+        });
+        if (!origins.length) addEmptyMessage(originList, "No se han registrado publicaciones de origen o redistribución.");
+
+        const coverageList = document.getElementById("coverage-list");
+        const coverage = Array.isArray(report.coverage) ? report.coverage : [];
+        coverage.forEach((entry) => {
+          const item = document.createElement("li");
+          const title = document.createElement("strong");
+          title.textContent = typeof entry.outlet === "string" ? entry.outlet : "Medio sin nombre";
+          item.append(title, document.createTextNode(` · ${entry.relation || "Relación no indicada"} · Orientación: ${leaningLabel(entry.leaning)} · `));
+          appendLink(item, entry.url, "Leer artículo");
+          if (safeUrl(entry.basis)) {
+            item.append(document.createTextNode(" · "));
+            appendLink(item, entry.basis, "Ver metodología");
+          }
+          const notes = document.createElement("p");
+          notes.textContent = entry.notes || "Sin resumen de la cobertura.";
+          item.append(notes);
+          coverageList.append(item);
+        });
+        if (!coverage.length) addEmptyMessage(coverageList, "No se han añadido artículos para comparar.");
+        document.getElementById("orientation-summary").textContent = report.orientationSummary ||
+          "Sin resumen de orientación. Las valoraciones individuales requieren referencias y metodología.";
+
+        const assessment = report.assessment && typeof report.assessment === "object" ? report.assessment : {};
+        const assessmentDetails = document.getElementById("assessment");
+        addDetail(assessmentDetails, "Estado", assessment.status || "Sin evaluar");
+        addDetail(assessmentDetails, "Posibles sesgos, errores o falacias (a revisar)", Array.isArray(assessment.labels) && assessment.labels.length ? assessment.labels.join(", ") : "No registrados");
+        addDetail(assessmentDetails, "Evidencia principal", "", assessment.evidence, "Abrir fuente");
+        addDetail(assessmentDetails, "Verificación publicada", "", assessment.checkUrl, "Leer la comprobación o el desmentido");
+        addDetail(assessmentDetails, "Justificación y límites", assessment.notes);
+
+        const checklist = document.getElementById("checklist");
+        checklistItems.forEach(([key, label]) => {
+          const item = document.createElement("li");
+          item.textContent = `${report.checks && report.checks[key] ? "☑" : "☐"} ${label}`;
+          checklist.append(item);
+        });
+      }
+
+      document.getElementById("print-button").addEventListener("click", () => window.print());
+
+      try {
+        const encodedReport = window.location.hash.slice(1);
+        if (!encodedReport) throw new Error("No se recibieron los datos de la ficha. Ábrela desde la herramienta de verificación.");
+        showReport(JSON.parse(decodeURIComponent(encodedReport)));
+      } catch (error) {
+        document.querySelector(".sheet").innerHTML =
+          '<h1>No se pudo abrir la ficha</h1><p class="empty"></p><a class="button" href="index.html">Volver a la herramienta</a>';
+        document.querySelector(".sheet .empty").textContent = error.message;
+      }
+    })();
+  </script>
+</body>
+</html>
