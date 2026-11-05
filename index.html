@@ -817,10 +817,14 @@
           <section class="research-panel" aria-labelledby="assessment-title">
             <div class="research-panel-heading"><h3 id="assessment-title">Evaluación editorial y posibles recursos</h3></div>
             <p>Selecciona una conclusión provisional y anota evidencia. Las falacias o sesgos son hipótesis de lectura, no prueba de que el autor pretendiera engañar.</p>
+            <div class="research-actions">
+              <button class="secondary-button" type="button" data-search="factcheck">Buscar verificaciones de esta afirmación</button>
+            </div>
             <form id="assessment-form">
               <div class="assessment-grid">
                 <div class="field"><label for="assessment-status">Estado de la afirmación</label><select id="assessment-status" name="status"><option>Sin evaluar</option><option>Respaldada por la evidencia consultada</option><option>Refutada por la evidencia consultada</option><option>Engañosa o sin contexto suficiente</option><option>Sin evidencia suficiente para concluir</option></select></div>
                 <div class="field"><label for="assessment-evidence">Enlace a la evidencia principal</label><input id="assessment-evidence" name="evidence" type="url" placeholder="https://..."></div>
+                <div class="field"><label for="assessment-check-url">Enlace a una verificación publicada</label><input id="assessment-check-url" name="checkUrl" type="url" placeholder="https://..."></div>
               </div>
               <div class="field">
                 <span class="field-label">Posibles sesgos, errores o falacias observados</span>
@@ -847,10 +851,6 @@
             <div class="entry-card" id="assessment-summary" aria-live="polite"></div>
             <div class="evidence-warning">La escala ideológica es una descripción editorial gradual, no una medida científica universal. Cita la metodología utilizada, separa la orientación general del medio de la cobertura de este artículo y deja la clasificación “sin evaluar” cuando no haya base suficiente.</div>
           </section>
-        </div>
-        <div class="checklist-heading">
-          <h3>Lista de comprobación</h3>
-          <span class="progress-copy" id="progress-copy">0 de 5 pasos completados</span>
         </div>
         <div class="checklist-heading">
           <h3>Lista de comprobación</h3>
@@ -923,6 +923,7 @@
           assessment: {
             status: assessmentForm.elements.status.value,
             evidence: assessmentForm.elements.evidence.value,
+            checkUrl: assessmentForm.elements.checkUrl.value,
             notes: assessmentForm.elements.notes.value,
             labels: Array.from(assessmentForm.querySelectorAll('input[name="labels"]:checked'), (input) => input.value)
           }
@@ -1098,6 +1099,12 @@
           appendLink(evidence, assessment.evidence, "Abrir fuente");
           summary.append(evidence);
         }
+        if (safeUrl(assessment.checkUrl)) {
+          const factCheck = document.createElement("p");
+          factCheck.append("Verificación publicada: ");
+          appendLink(factCheck, assessment.checkUrl, "Leer la comprobación o el desmentido");
+          summary.append(factCheck);
+        }
       }
 
       function renderResearch() {
@@ -1158,6 +1165,9 @@
             : "Sin evaluar";
           assessmentForm.elements.evidence.value = typeof assessment.evidence === "string" && safeUrl(assessment.evidence)
             ? assessment.evidence
+            : "";
+          assessmentForm.elements.checkUrl.value = typeof assessment.checkUrl === "string" && safeUrl(assessment.checkUrl)
+            ? assessment.checkUrl
             : "";
           assessmentForm.elements.notes.value = typeof assessment.notes === "string" ? assessment.notes : "";
           const savedLabels = Array.isArray(assessment.labels) ? assessment.labels : [];
@@ -1229,6 +1239,8 @@
             ? `"${claim}" (site:x.com OR site:facebook.com OR site:instagram.com OR site:tiktok.com)`
             : button.dataset.search === "coverage"
               ? `"${claim}" noticias medios`
+              : button.dataset.search === "factcheck"
+                ? `"${claim}" (verificación OR desmentido OR "fact check" OR comprobación)`
               : `"${claim}" origen`;
           search.searchParams.set("q", query);
           window.open(search.href, "_blank", "noopener,noreferrer");
@@ -1286,6 +1298,7 @@
           `Estado: ${report.assessment.status}`,
           `Posibles sesgos, errores o falacias: ${report.assessment.labels.length ? report.assessment.labels.join(", ") : "No registrados"}`,
           report.assessment.evidence ? `Evidencia principal: ${report.assessment.evidence}` : "",
+          report.assessment.checkUrl ? `Verificación publicada: ${report.assessment.checkUrl}` : "",
           report.assessment.notes ? `Justificación: ${report.assessment.notes}` : "",
           "",
           "LISTA DE COMPROBACIÓN",
