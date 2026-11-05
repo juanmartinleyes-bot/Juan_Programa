@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="description" content="Mesa de verificación: una herramienta editorial para documentar y verificar contenidos publicados en redes sociales.">
+  <title>Mesa de verificación — Redacción</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f4ef;
+      --surface: #fffefa;
+      --ink: #17241f;
+      --muted: #737c76;
+      --line: #e6e7df;
+      --green: #245b45;
+      --green-dark: #194533;
+      --green-soft: #eaf1eb;
+      --amber: #99652a;
+      --amber-soft: #f8f0e2;
+      --red: #a64e43;
+      --shadow: 0 16px 44px rgb(34 47 39 / 6%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .topbar {
+      height: 66px;
+      padding: 0 5.3%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgb(255 254 250 / 75%);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 31px;
+      height: 31px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: var(--green);
+      color: white;
+    }
+
+    .brand-mark svg { width: 19px; height: 19px; }
+
+    .edition {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .edition-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #6a9a72;
+      box-shadow: 0 0 0 3px #e6efe5;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 48px 0 68px;
+    }
+
+    .intro {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 500;
+      letter-spacing: -1.7px;
+      line-height: 1.06;
+    }
+
+    .intro-copy {
+      max-width: 490px;
+      margin: 13px 0 0;
+      color: #626c65;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .privacy-note {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: #56645a;
+      background: var(--surface);
+      font-size: 11px;
+    }
+
+    .privacy-note svg { width: 15px; height: 15px; color: var(--green); }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.57fr) minmax(270px, .83fr);
+      align-items: start;
+      gap: 20px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .form-card { padding: 26px 28px 25px; }
+
+    .card-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .step-number {
+      width: 31px;
+      height: 31px;
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--green);
+      background: var(--green-soft);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .card-heading h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 680;
+      letter-spacing: -.2px;
+    }
+
+    .card-heading p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .field { margin-bottom: 18px; }
+
+    label, .field-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #303b34;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .optional {
+      margin-left: 5px;
+      color: #969d97;
+      font-size: 11px;
+      font-weight: 450;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #dfe2d9;
+      border-radius: 6px;
+      outline: none;
+      background: #fff;
+      color: var(--ink);
+      font-size: 13px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    input, select { height: 43px; padding: 0 12px; }
+    textarea { min-height: 105px; padding: 11px 12px; resize: vertical; line-height: 1.55; }
+    input::placeholder, textarea::placeholder { color: #a0a69f; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #6d9479;
+      box-shadow: 0 0 0 3px rgb(72 122 86 / 12%);
+    }
+
+    .field-hint {
+      margin: 7px 0 0;
+      color: #858d87;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin-top: 23px;
+    }
+
+    .primary-button {
+      min-height: 43px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 17px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--green);
+      color: white;
+      font-size: 12px;
+      font-weight: 650;
+      transition: background .15s, transform .15s;
+    }
+
+    .primary-button:hover { background: var(--green-dark); }
+    .primary-button:active { transform: translateY(1px); }
+    .primary-button svg { width: 16px; height: 16px; }
+
+    .save-status { color: #7c857d; font-size: 11px; }
+
+    .side-column { display: grid; gap: 15px; }
+
+    .workflow-card, .principles-card { padding: 22px; }
+
+    .side-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -.3px;
+    }
+
+    .workflow-intro {
+      margin: 7px 0 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .workflow-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .workflow-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 12px 0;
+      border-top: 1px solid #eff0ea;
+    }
+
+    .workflow-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 50%;
+      background: #f0f3ed;
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .workflow-list strong { display: block; font-size: 12px; font-weight: 650; }
+    .workflow-list span:last-child { display: block; margin-top: 3px; color: #7b847d; font-size: 11px; line-height: 1.45; }
+
+    .principles-card {
+      border-color: #eadfc9;
+      background: #fbf7ee;
+      box-shadow: none;
+    }
+
+    .principle-heading {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .principle-heading svg { width: 17px; height: 17px; color: var(--amber); }
+    .principle-heading h2 { margin: 0; font-size: 12px; font-weight: 700; }
+
+    .principles-card p {
+      margin: 10px 0 0;
+      color: #786b56;
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    .result-card {
+      display: none;
+      grid-column: 1 / -1;
+      padding: 25px 28px 26px;
+      animation: appear .24s ease-out;
+    }
+
+    .result-card.visible { display: block; }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .result-heading {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .result-heading h2 {
+      margin: 1px 0 5px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 23px;
+      font-weight: 500;
+    }
+
+    .result-heading p { margin: 0; color: var(--muted); font-size: 12px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 20px;
+      background: var(--amber-soft);
+      color: var(--amber);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .badge::before {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      content: "";
+    }
+
+    .result-claim {
+      margin: 19px 0 20px;
+      padding: 14px 16px;
+      border-left: 3px solid #8da78f;
+      background: #f6f7f2;
+      color: #46534a;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 15px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .checklist-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 9px;
+    }
+
+    .checklist-heading h3 { margin: 0; font-size: 13px; font-weight: 700; }
+    .progress-copy { color: var(--muted); font-size: 11px; }
+
+    .progress-track {
+      height: 4px;
+      margin-bottom: 13px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #edf0e9;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: #67906d;
+      transition: width .2s ease;
+    }
+
+    .checklist { display: grid; gap: 7px; }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 10px 11px;
+      border: 1px solid #ebede7;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .check-item input {
+      width: 15px;
+      height: 15px;
+      flex: 0 0 auto;
+      margin: 1px 0 0;
+      accent-color: var(--green);
+    }
+
+    .check-item span { color: #48534b; font-size: 12px; line-height: 1.5; }
+    .check-item:has(input:checked) span { color: #79827b; text-decoration: line-through; }
+
+    .result-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .secondary-button {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 11px;
+      border: 1px solid #dfe2d9;
+      border-radius: 5px;
+      background: white;
+      color: #455249;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .secondary-button:hover { background: #f7f8f4; }
+    .secondary-button svg { width: 14px; height: 14px; }
+    .result-actions { display: flex; gap: 8px; }
+
+    .notice {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 3;
+      max-width: calc(100% - 48px);
+      padding: 12px 16px;
+      border-radius: 7px;
+      background: #1d3025;
+      color: white;
+      box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity .18s, transform .18s;
+    }
+
+    .notice.visible { opacity: 1; transform: translateY(0); }
+
+    footer {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 16px 0 25px;
+      border-top: 1px solid var(--line);
+      color: #818a83;
+      font-size: 10px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .topbar { height: 59px; padding: 0 22px; }
+      main { width: min(100% - 32px, 560px); padding: 35px 0 45px; }
+      .intro { align-items: flex-start; flex-direction: column; gap: 15px; margin-bottom: 22px; }
+      h1 { font-size: 40px; }
+      .intro-copy { font-size: 14px; }
+      .workspace { grid-template-columns: 1fr; gap: 14px; }
+      .form-card { padding: 22px 19px; }
+      .side-column { grid-template-columns: 1fr 1fr; align-items: stretch; }
+      .workflow-card, .principles-card { padding: 18px 16px; }
+      .result-card { grid-column: auto; padding: 21px 19px; }
+      footer { width: calc(100% - 32px); }
+    }
+
+    @media (max-width: 480px) {
+      .edition { font-size: 9px; }
+      .brand { font-size: 17px; }
+      .side-column { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .result-top { flex-direction: column; }
+      .result-bottom { align-items: flex-start; flex-direction: column; }
+      .result-actions { width: 100%; }
+      .result-actions button { flex: 1; }
+      .form-actions { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Redacción, inicio">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 5.5h16M4 10h10M4 14.5h7"></path>
+          <circle cx="17.5" cy="16.5" r="3.5"></circle>
+          <path d="m20 19 2 2"></path>
+        </svg>
+      </span>
+      Redacción
+    </a>
+    <div class="edition"><span class="edition-dot" aria-hidden="true"></span> Herramienta editorial</div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Periodismo · Verificación digital</p>
+        <h1 id="page-title">Antes de compartir,<br>comprobamos.</h1>
+        <p class="intro-copy">Una mesa de trabajo para investigar publicaciones virales con rigor, contexto y fuentes confiables. Registra lo que sabes y documenta cada paso.</p>
+      </div>
+      <div class="privacy-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 1 1 8 0v3"></path>
+        </svg>
+        Tu borrador se guarda en este dispositivo
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Espacio de verificación">
+      <form class="card form-card" id="verification-form">
+        <div class="card-heading">
+          <span class="step-number">01</span>
+          <div>
+            <h2>Registra el contenido</h2>
+            <p>Empieza por la publicación que quieres investigar.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="post-url">Enlace de la publicación <span class="optional">opcional</span></label>
+          <input id="post-url" name="url" type="url" placeholder="https://..." autocomplete="url">
+          <p class="field-hint">Pega el enlace directo siempre que esté disponible. No abrimos ni analizamos el enlace automáticamente.</p>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="platform">Red social</label>
+            <select id="platform" name="platform">
+              <option value="">Selecciona una plataforma</option>
+              <option>X (Twitter)</option>
+              <option>Facebook</option>
+              <option>Instagram</option>
+              <option>TikTok</option>
+              <option>YouTube</option>
+              <option>WhatsApp</option>
+              <option>Otra / no identificada</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="post-date">Fecha de publicación <span class="optional">si se conoce</span></label>
+            <input id="post-date" name="date" type="date">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="claim">¿Qué afirma el contenido?</label>
+          <textarea id="claim" name="claim" required maxlength="1200" placeholder="Resume la afirmación principal con tus propias palabras. Separa los hechos comprobables de las opiniones."></textarea>
+          <p class="field-hint">Enfócate en una afirmación concreta que pueda contrastarse con evidencia.</p>
+        </div>
+
+        <div class="field">
+          <label for="context">Contexto o primeras pistas <span class="optional">opcional</span></label>
+          <textarea id="context" name="context" maxlength="800" placeholder="¿Quién lo publicó? ¿Qué dudas surgieron? ¿Hay imágenes, cifras o fuentes citadas?" style="min-height: 76px;"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="primary-button" type="submit">
+            Crear ficha de verificación
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6"></path>
+            </svg>
+          </button>
+          <span class="save-status" id="save-status" aria-live="polite">Los cambios se guardan automáticamente.</span>
+        </div>
+      </form>
+
+      <aside class="side-column" aria-label="Guía de verificación">
+        <section class="card workflow-card">
+          <h2 class="side-title">Una buena verificación</h2>
+          <p class="workflow-intro">No se trata solo de buscar: importa cómo reunimos y contrastamos la evidencia.</p>
+          <ol class="workflow-list">
+            <li>
+              <span class="workflow-icon">1</span>
+              <div><strong>Rastrea el origen</strong><span>Busca quién publicó primero y cuándo.</span></div>
+            </li>
+            <li>
+              <span class="workflow-icon">2</span>
+              <div><strong>Busca evidencia primaria</strong><span>Consulta documentos, datos y testigos directos.</span></div>
+            </li>
+            <li>
+              <span class="workflow-icon">3</span>
+              <div><strong>Contrasta y contextualiza</strong><span>Verifica fechas, lugares y fuentes independientes.</span></div>
+            </li>
+            <li>
+              <span class="workflow-icon">4</span>
+              <div><strong>Documenta tus hallazgos</strong><span>Explica qué sabes y qué queda sin confirmar.</span></div>
+            </li>
+          </ol>
+        </section>
+
+        <section class="card principles-card">
+          <div class="principle-heading">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3 3.8 7v5.5c0 4.3 3.5 7.6 8.2 8.5 4.7-.9 8.2-4.2 8.2-8.5V7L12 3Z"></path>
+              <path d="m8.5 12 2.2 2.2 4.8-4.8"></path>
+            </svg>
+            <h2>El criterio es humano</h2>
+          </div>
+          <p>Esta herramienta organiza tu investigación; no consulta fuentes ni determina si una publicación es verdadera o falsa. Contrasta la evidencia antes de publicar.</p>
+        </section>
+      </aside>
+
+      <section class="card result-card" id="result-card" aria-labelledby="result-title" aria-live="polite">
+        <div class="result-top">
+          <div class="result-heading">
+            <span class="step-number">02</span>
+            <div>
+              <h2 id="result-title">Tu ficha de investigación</h2>
+              <p id="result-meta">Punto de partida para la revisión editorial.</p>
+            </div>
+          </div>
+          <span class="badge">Pendiente de verificar</span>
+        </div>
+        <blockquote class="result-claim" id="result-claim"></blockquote>
+        <div class="checklist-heading">
+          <h3>Lista de comprobación</h3>
+          <span class="progress-copy" id="progress-copy">0 de 5 pasos completados</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Progreso de verificación" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="checklist" id="checklist">
+          <label class="check-item"><input type="checkbox" data-check="origin"><span>Identifiqué la fuente original y comprobé la fecha de publicación.</span></label>
+          <label class="check-item"><input type="checkbox" data-check="media"><span>Comprobé el contexto, el lugar y la fecha de las imágenes o videos.</span></label>
+          <label class="check-item"><input type="checkbox" data-check="primary"><span>Consulté fuentes primarias o evidencia documental relevante.</span></label>
+          <label class="check-item"><input type="checkbox" data-check="independent"><span>Contrasté la afirmación con fuentes independientes y confiables.</span></label>
+          <label class="check-item"><input type="checkbox" data-check="uncertainty"><span>Registré qué no pude confirmar y evité conclusiones más allá de la evidencia.</span></label>
+        </div>
+        <div class="result-bottom">
+          <span class="save-status">Marca los pasos a medida que avances en tu investigación.</span>
+          <div class="result-actions">
+            <button class="secondary-button" type="button" id="copy-button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"></path>
+              </svg>
+              Copiar ficha
+            </button>
+            <button class="secondary-button" type="button" id="clear-button">Limpiar borrador</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    Herramienta de apoyo al trabajo periodístico. La verificación requiere criterio editorial, fuentes contrastables y transparencia sobre las limitaciones.
+  </footer>
+
+  <div class="notice" id="notice" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const storageKey = "redaccion-verificacion-v1";
+      const form = document.getElementById("verification-form");
+      const resultCard = document.getElementById("result-card");
+      const notice = document.getElementById("notice");
+      const fields = {
+        url: document.getElementById("post-url"),
+        platform: document.getElementById("platform"),
+        date: document.getElementById("post-date"),
+        claim: document.getElementById("claim"),
+        context: document.getElementById("context")
+      };
+      const checkboxes = Array.from(document.querySelectorAll("[data-check]"));
+      let noticeTimer;
+
+      function readState() {
+        return {
+          ...Object.fromEntries(Object.entries(fields).map(([key, element]) => [key, element.value])),
+          checks: Object.fromEntries(checkboxes.map((checkbox) => [checkbox.dataset.check, checkbox.checked]))
+        };
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(readState()));
+          document.getElementById("save-status").textContent = "Guardado en este dispositivo.";
+        } catch (error) {
+          document.getElementById("save-status").textContent = "No se pudo guardar en este dispositivo.";
+        }
+      }
+
+      function updateProgress() {
+        const complete = checkboxes.filter((checkbox) => checkbox.checked).length;
+        const total = checkboxes.length;
+        document.getElementById("progress-copy").textContent = `${complete} de ${total} pasos completados`;
+        document.getElementById("progress-fill").style.width = `${(complete / total) * 100}%`;
+        document.querySelector(".progress-track").setAttribute("aria-valuenow", String(complete));
+      }
+
+      function renderResult() {
+        const claim = fields.claim.value.trim();
+        if (!claim) {
+          resultCard.classList.remove("visible");
+          return;
+        }
+        document.getElementById("result-claim").textContent = claim;
+        const details = [fields.platform.value, fields.date.value].filter(Boolean);
+        document.getElementById("result-meta").textContent = details.length
+          ? `Punto de partida · ${details.join(" · ")}`
+          : "Punto de partida para la revisión editorial.";
+        resultCard.classList.add("visible");
+        updateProgress();
+      }
+
+      function showNotice(message) {
+        notice.textContent = message;
+        notice.classList.add("visible");
+        clearTimeout(noticeTimer);
+        noticeTimer = setTimeout(() => notice.classList.remove("visible"), 2600);
+      }
+
+      function restoreState() {
+        try {
+          const saved = localStorage.getItem(storageKey);
+          if (!saved) return;
+          const state = JSON.parse(saved);
+          for (const [key, element] of Object.entries(fields)) {
+            if (typeof state[key] === "string") element.value = state[key];
+          }
+          for (const checkbox of checkboxes) {
+            checkbox.checked = Boolean(state.checks && state.checks[checkbox.dataset.check]);
+          }
+          renderResult();
+          updateProgress();
+          document.getElementById("save-status").textContent = "Borrador recuperado de este dispositivo.";
+        } catch (error) {
+          localStorage.removeItem(storageKey);
+          document.getElementById("save-status").textContent = "No se pudo recuperar el borrador guardado.";
+        }
+      }
+
+      form.addEventListener("input", () => {
+        saveState();
+        if (resultCard.classList.contains("visible")) renderResult();
+      });
+
+      form.addEventListener("change", () => {
+        saveState();
+        if (resultCard.classList.contains("visible")) renderResult();
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        renderResult();
+        saveState();
+        resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          updateProgress();
+          saveState();
+        });
+      });
+
+      document.getElementById("copy-button").addEventListener("click", async () => {
+        const state = readState();
+        const lines = [
+          "FICHA DE VERIFICACIÓN — REDACCIÓN",
+          `Afirmación: ${state.claim.trim()}`,
+          state.url ? `Enlace: ${state.url}` : "",
+          state.platform ? `Plataforma: ${state.platform}` : "",
+          state.date ? `Fecha: ${state.date}` : "",
+          state.context.trim() ? `Contexto / primeras pistas: ${state.context.trim()}` : "",
+          "",
+          "LISTA DE COMPROBACIÓN",
+          ...checkboxes.map((checkbox) => `${checkbox.checked ? "[x]" : "[ ]"} ${checkbox.querySelector("span").textContent}`),
+          "",
+          "Estado: pendiente de verificación. Esta ficha no determina automáticamente la veracidad."
+        ].filter((line) => line !== undefined);
+        try {
+          await navigator.clipboard.writeText(lines.join("\n"));
+          showNotice("Ficha copiada al portapapeles.");
+        } catch (error) {
+          showNotice("No se pudo copiar. Revisa los permisos del navegador.");
+        }
+      });
+
+      document.getElementById("clear-button").addEventListener("click", () => {
+        if (!window.confirm("¿Limpiar el borrador y borrar la ficha guardada en este dispositivo?")) return;
+        form.reset();
+        checkboxes.forEach((checkbox) => { checkbox.checked = false; });
+        localStorage.removeItem(storageKey);
+        resultCard.classList.remove("visible");
+        updateProgress();
+        document.getElementById("save-status").textContent = "Los cambios se guardan automáticamente.";
+        fields.claim.focus();
+        showNotice("Borrador eliminado.");
+      });
+
+      restoreState();
+    })();
+  </script>
+</body>
+</html>
