@@ -469,6 +469,81 @@
     .check-item span { color: #48534b; font-size: 12px; line-height: 1.5; }
     .check-item:has(input:checked) span { color: #79827b; text-decoration: line-through; }
 
+    .research-workspace {
+      display: grid;
+      gap: 15px;
+      margin: 22px 0;
+    }
+
+    .research-panel {
+      padding: 18px;
+      border: 1px solid #e8eae2;
+      border-radius: 8px;
+      background: #fcfcf9;
+    }
+
+    .research-panel-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .research-panel h3 { margin: 0; font-size: 14px; font-weight: 700; }
+    .research-panel > p { margin: 6px 0 14px; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .research-panel .field { margin-bottom: 12px; }
+    .research-panel .field:last-child { margin-bottom: 0; }
+    .research-panel label { font-size: 11px; }
+    .research-panel input, .research-panel select { height: 39px; font-size: 12px; }
+    .research-panel textarea { min-height: 65px; font-size: 12px; }
+    .research-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .research-fields .field { min-width: 0; }
+    .research-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .research-actions .secondary-button { min-height: 32px; font-size: 10px; }
+
+    .entry-form {
+      margin: 12px 0;
+      padding: 13px;
+      border: 1px solid #ebede7;
+      border-radius: 6px;
+      background: white;
+    }
+
+    .entry-form[hidden] { display: none; }
+    .entry-form .primary-button { min-height: 36px; margin-top: 3px; font-size: 11px; }
+
+    .entry-list { display: grid; gap: 8px; margin-top: 11px; }
+
+    .entry-card {
+      padding: 12px;
+      border: 1px solid #e9ebe5;
+      border-radius: 6px;
+      background: white;
+    }
+
+    .entry-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .entry-card h4 { margin: 0; color: #344139; font-size: 12px; font-weight: 700; }
+    .entry-card p { margin: 6px 0 0; color: #657067; font-size: 11px; line-height: 1.55; overflow-wrap: anywhere; }
+    .entry-card a { color: var(--green); overflow-wrap: anywhere; }
+    .entry-card .remove-entry { padding: 3px 6px; border: 0; background: transparent; color: #8d5c55; font-size: 10px; }
+    .empty-state { padding: 10px 0; color: #838b84; font-size: 11px; }
+    .classification-options { display: flex; flex-wrap: wrap; gap: 7px; }
+    .classification-choice { display: inline-flex; align-items: center; gap: 6px; padding: 6px 8px; border: 1px solid #e7e9e2; border-radius: 5px; background: #fff; color: #536057; font-size: 10px; cursor: pointer; }
+    .classification-choice input { width: 13px; height: 13px; accent-color: var(--green); }
+    .scale-label { display: flex; justify-content: space-between; gap: 8px; color: #727d74; font-size: 10px; }
+    .scale-note { margin: 7px 0 0 !important; color: #828a83 !important; font-size: 10px !important; }
+    .assessment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .evidence-warning {
+      margin-top: 13px;
+      padding: 10px 12px;
+      border-left: 3px solid #c79a55;
+      background: #fbf7ee;
+      color: #786b56;
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
     .result-bottom {
       display: flex;
       align-items: center;
@@ -538,6 +613,7 @@
       .side-column { grid-template-columns: 1fr 1fr; align-items: stretch; }
       .workflow-card, .principles-card { padding: 18px 16px; }
       .result-card { grid-column: auto; padding: 21px 19px; }
+      .research-panel { padding: 14px; }
       footer { width: calc(100% - 32px); }
     }
 
@@ -546,6 +622,7 @@
       .brand { font-size: 17px; }
       .side-column { grid-template-columns: 1fr; }
       .field-row { grid-template-columns: 1fr; gap: 0; }
+      .research-fields, .assessment-grid { grid-template-columns: 1fr; gap: 0; }
       .result-top { flex-direction: column; }
       .result-bottom { align-items: flex-start; flex-direction: column; }
       .result-actions { width: 100%; }
@@ -678,7 +755,7 @@
             </svg>
             <h2>El criterio es humano</h2>
           </div>
-          <p>Esta herramienta organiza tu investigación; no consulta fuentes ni determina si una publicación es verdadera o falsa. Contrasta la evidencia antes de publicar.</p>
+          <p>Las búsquedas abren un buscador externo y comparten la frase consultada. Esta página no rastrea redes ni lee medios automáticamente: documenta fuentes que tú localizas. La orientación y las conclusiones deben citar evidencia; no se infiere intención de engañar.</p>
         </section>
       </aside>
 
@@ -694,6 +771,87 @@
           <span class="badge">Pendiente de verificar</span>
         </div>
         <blockquote class="result-claim" id="result-claim"></blockquote>
+        <div class="research-workspace">
+          <section class="research-panel" aria-labelledby="origin-title">
+            <div class="research-panel-heading"><h3 id="origin-title">Rastro del contenido</h3></div>
+            <p>Registra publicaciones encontradas en orden temporal: autor o cuenta original, republicaciones y cobertura posterior. La primera fecha que encuentres no prueba por sí sola el origen.</p>
+            <div class="research-actions">
+              <button class="secondary-button" type="button" data-search="origin">Buscar frase en la web</button>
+              <button class="secondary-button" type="button" data-search="social">Buscar frase en redes indexadas</button>
+            </div>
+            <form class="entry-form" id="origin-form">
+              <div class="research-fields">
+                <div class="field"><label for="origin-source">Cuenta, sitio o fuente</label><input id="origin-source" name="source" required maxlength="120" placeholder="Nombre o @cuenta"></div>
+                <div class="field"><label for="origin-kind">Tipo de publicación</label><select id="origin-kind" name="kind" required><option value="Publicación original posible">Publicación original posible</option><option value="Republicación en red social">Republicación en red social</option><option value="Cobertura de un medio">Cobertura de un medio</option><option value="Fuente primaria">Fuente primaria</option><option value="Archivo o verificación">Archivo o verificación</option></select></div>
+                <div class="field"><label for="origin-date">Fecha y hora conocidas</label><input id="origin-date" name="date" type="datetime-local"></div>
+                <div class="field"><label for="origin-url">Enlace a la evidencia</label><input id="origin-url" name="url" type="url" required placeholder="https://..."></div>
+              </div>
+              <div class="field"><label for="origin-notes">¿Qué muestra esta fuente?</label><textarea id="origin-notes" name="notes" maxlength="500" placeholder="Describe qué permite establecer y qué no."></textarea></div>
+              <button class="primary-button" type="submit">Añadir al rastro</button>
+            </form>
+            <div class="entry-list" id="origin-list" aria-live="polite"></div>
+          </section>
+
+          <section class="research-panel" aria-labelledby="coverage-title">
+            <div class="research-panel-heading"><h3 id="coverage-title">Contraste entre medios</h3></div>
+            <p>Compara lo que reporta cada artículo sobre la misma afirmación. Registra la orientación editorial con matices solo si una evaluación independiente la sustenta; no es una calificación de veracidad.</p>
+            <div class="research-actions">
+              <button class="secondary-button" type="button" data-search="coverage">Buscar cobertura en otros medios</button>
+            </div>
+            <form class="entry-form" id="coverage-form">
+              <div class="research-fields">
+                <div class="field"><label for="coverage-outlet">Medio informativo</label><input id="coverage-outlet" name="outlet" required maxlength="120" placeholder="Nombre del medio"></div>
+                <div class="field"><label for="coverage-date">Fecha del artículo</label><input id="coverage-date" name="date" type="date"></div>
+                <div class="field"><label for="coverage-url">Enlace al artículo</label><input id="coverage-url" name="url" type="url" required placeholder="https://..."></div>
+                <div class="field"><label for="coverage-relation">Relación con la afirmación</label><select id="coverage-relation" name="relation"><option>La confirma</option><option>La contradice</option><option>La contextualiza</option><option>No la evalúa</option></select></div>
+                <div class="field"><label for="coverage-leaning">Orientación editorial (escala gradual)</label><select id="coverage-leaning" name="leaning"><option value="">Sin evaluar</option><option value="-5">−5 · Izquierda marcada</option><option value="-4">−4 · Izquierda</option><option value="-3">−3 · Centroizquierda</option><option value="-2">−2 · Centroizquierda moderada</option><option value="-1">−1 · Leve centroizquierda</option><option value="0">0 · Centro</option><option value="1">+1 · Leve centroderecha</option><option value="2">+2 · Centroderecha moderada</option><option value="3">+3 · Centroderecha</option><option value="4">+4 · Derecha</option><option value="5">+5 · Derecha marcada</option></select></div>
+                <div class="field"><label for="coverage-basis">Enlace a la fuente o metodología para esa orientación</label><input id="coverage-basis" name="basis" type="url" placeholder="https://... (recomendado)"></div>
+              </div>
+              <div class="field"><label for="coverage-notes">Resumen de coincidencias, diferencias y evidencia</label><textarea id="coverage-notes" name="notes" maxlength="700" placeholder="¿Qué dato confirma, contradice o aporta contexto? Distingue hechos de opinión."></textarea></div>
+              <button class="primary-button" type="submit">Añadir comparación</button>
+            </form>
+            <div class="entry-list" id="coverage-list" aria-live="polite"></div>
+            <p class="scale-note" id="orientation-summary">Orientación: −5 (izquierda) a +5 (derecha), con matices. Solo se resume si hay al menos tres medios evaluados con una base documentada; el resultado describe esta muestra, no todo el ecosistema mediático.</p>
+          </section>
+
+          <section class="research-panel" aria-labelledby="assessment-title">
+            <div class="research-panel-heading"><h3 id="assessment-title">Evaluación editorial y posibles recursos</h3></div>
+            <p>Selecciona una conclusión provisional y anota evidencia. Las falacias o sesgos son hipótesis de lectura, no prueba de que el autor pretendiera engañar.</p>
+            <form id="assessment-form">
+              <div class="assessment-grid">
+                <div class="field"><label for="assessment-status">Estado de la afirmación</label><select id="assessment-status" name="status"><option>Sin evaluar</option><option>Respaldada por la evidencia consultada</option><option>Refutada por la evidencia consultada</option><option>Engañosa o sin contexto suficiente</option><option>Sin evidencia suficiente para concluir</option></select></div>
+                <div class="field"><label for="assessment-evidence">Enlace a la evidencia principal</label><input id="assessment-evidence" name="evidence" type="url" placeholder="https://..."></div>
+              </div>
+              <div class="field">
+                <span class="field-label">Posibles sesgos, errores o falacias observados</span>
+                <div class="classification-options">
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Omisión de contexto">Omisión de contexto</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Encuadre o lenguaje emocional">Encuadre emocional</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Selección sesgada de evidencia">Selección sesgada</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Falso equilibrio">Falso equilibrio</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Falso dilema">Falso dilema</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Apelación al miedo">Apelación al miedo</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Ataque ad hominem">Ad hominem</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Hombre de paja">Hombre de paja</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Falsa causa o correlación">Falsa causa / correlación</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Apelación a autoridad no pertinente">Autoridad no pertinente</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Dato o cita tergiversados">Dato o cita tergiversados</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Imagen o video fuera de contexto">Imagen / video fuera de contexto</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="Contenido manipulado o sintético">Contenido manipulado / sintético</label>
+                  <label class="classification-choice"><input type="checkbox" name="labels" value="No se identifica un recurso de esta lista">Ninguno identificado</label>
+                </div>
+              </div>
+              <div class="field"><label for="assessment-notes">Justificación y límites de la conclusión</label><textarea id="assessment-notes" name="notes" maxlength="1000" placeholder="Cita el pasaje o dato, enlaza la evidencia y explica por qué corresponde (o qué falta por comprobar)."></textarea></div>
+              <button class="primary-button" type="submit">Guardar evaluación</button>
+            </form>
+            <div class="entry-card" id="assessment-summary" aria-live="polite"></div>
+            <div class="evidence-warning">La escala ideológica es una descripción editorial gradual, no una medida científica universal. Cita la metodología utilizada, separa la orientación general del medio de la cobertura de este artículo y deja la clasificación “sin evaluar” cuando no haya base suficiente.</div>
+          </section>
+        </div>
+        <div class="checklist-heading">
+          <h3>Lista de comprobación</h3>
+          <span class="progress-copy" id="progress-copy">0 de 5 pasos completados</span>
+        </div>
         <div class="checklist-heading">
           <h3>Lista de comprobación</h3>
           <span class="progress-copy" id="progress-copy">0 de 5 pasos completados</span>
@@ -734,6 +892,7 @@
     (() => {
       const storageKey = "redaccion-verificacion-v1";
       const form = document.getElementById("verification-form");
+      const assessmentForm = document.getElementById("assessment-form");
       const resultCard = document.getElementById("result-card");
       const notice = document.getElementById("notice");
       const fields = {
@@ -744,12 +903,29 @@
         context: document.getElementById("context")
       };
       const checkboxes = Array.from(document.querySelectorAll("[data-check]"));
+      const state = {
+        origins: [],
+        coverage: [],
+      };
+      const orientationLabels = [
+        "Izquierda marcada", "Izquierda", "Centroizquierda", "Centroizquierda moderada",
+        "Leve centroizquierda", "Centro", "Leve centroderecha", "Centroderecha moderada",
+        "Centroderecha", "Derecha", "Derecha marcada"
+      ];
       let noticeTimer;
 
       function readState() {
         return {
           ...Object.fromEntries(Object.entries(fields).map(([key, element]) => [key, element.value])),
-          checks: Object.fromEntries(checkboxes.map((checkbox) => [checkbox.dataset.check, checkbox.checked]))
+          checks: Object.fromEntries(checkboxes.map((checkbox) => [checkbox.dataset.check, checkbox.checked])),
+          origins: state.origins,
+          coverage: state.coverage,
+          assessment: {
+            status: assessmentForm.elements.status.value,
+            evidence: assessmentForm.elements.evidence.value,
+            notes: assessmentForm.elements.notes.value,
+            labels: Array.from(assessmentForm.querySelectorAll('input[name="labels"]:checked'), (input) => input.value)
+          }
         };
       }
 
@@ -770,6 +946,166 @@
         document.querySelector(".progress-track").setAttribute("aria-valuenow", String(complete));
       }
 
+      function safeUrl(value) {
+        try {
+          const parsed = new URL(value);
+          return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.href : "";
+        } catch (error) {
+          return "";
+        }
+      }
+
+      function appendLink(container, value, label) {
+        const href = safeUrl(value);
+        if (!href) return;
+        const link = document.createElement("a");
+        link.href = href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = label;
+        container.append(link);
+      }
+
+      function makeEntryCard(title, details, url, linkLabel, onRemove, secondaryUrl, secondaryLabel) {
+        const card = document.createElement("article");
+        card.className = "entry-card";
+        const header = document.createElement("div");
+        header.className = "entry-card-header";
+        const heading = document.createElement("h4");
+        heading.textContent = title;
+        const remove = document.createElement("button");
+        remove.className = "remove-entry";
+        remove.type = "button";
+        remove.textContent = "Quitar";
+        remove.setAttribute("aria-label", `Quitar ${title}`);
+        remove.addEventListener("click", onRemove);
+        header.append(heading, remove);
+        card.append(header);
+        for (const text of details.filter(Boolean)) {
+          const paragraph = document.createElement("p");
+          paragraph.textContent = text;
+          card.append(paragraph);
+        }
+        if (safeUrl(url)) {
+          const paragraph = document.createElement("p");
+          appendLink(paragraph, url, linkLabel);
+          card.append(paragraph);
+        }
+        if (safeUrl(secondaryUrl)) {
+          const paragraph = document.createElement("p");
+          appendLink(paragraph, secondaryUrl, secondaryLabel);
+          card.append(paragraph);
+        }
+        return card;
+      }
+
+      function renderOrigins() {
+        const list = document.getElementById("origin-list");
+        list.replaceChildren();
+        const entries = state.origins
+          .map((entry, index) => ({ entry, index }))
+          .sort((a, b) => (a.entry.date || "9999").localeCompare(b.entry.date || "9999"));
+        if (!entries.length) {
+          list.innerHTML = '<div class="empty-state">Todavía no hay publicaciones documentadas.</div>';
+          return;
+        }
+        entries.forEach(({ entry, index }) => {
+          const date = entry.date ? entry.date.replace("T", " ") : "Fecha no registrada";
+          list.append(makeEntryCard(
+            entry.source,
+            [`${entry.kind} · ${date}`, entry.notes],
+            entry.url,
+            "Abrir fuente documentada",
+            () => {
+              state.origins.splice(index, 1);
+              renderResearch();
+              saveState();
+            }
+          ));
+        });
+      }
+
+      function leaningLabel(value) {
+        const score = Number(value);
+        return Number.isInteger(score) && score >= -5 && score <= 5
+          ? `${orientationLabels[score + 5]} (${score > 0 ? "+" : ""}${score})`
+          : "Sin evaluar";
+      }
+
+      function renderCoverage() {
+        const list = document.getElementById("coverage-list");
+        list.replaceChildren();
+        if (!state.coverage.length) {
+          list.innerHTML = '<div class="empty-state">Añade artículos de distintos medios para compararlos.</div>';
+        } else {
+          state.coverage.forEach((entry, index) => {
+            const date = entry.date ? ` · ${entry.date}` : "";
+            const details = [
+              `${entry.relation}${date}`,
+              entry.notes,
+              entry.leaning !== "" ? `Orientación registrada: ${leaningLabel(entry.leaning)}` : "Orientación editorial: sin evaluar"
+            ];
+            list.append(makeEntryCard(
+              entry.outlet,
+              details,
+              entry.url,
+              "Abrir artículo",
+              () => {
+                state.coverage.splice(index, 1);
+                renderResearch();
+                saveState();
+              },
+              entry.basis,
+              "Abrir fuente de orientación"
+            ));
+          });
+        }
+
+        const documented = state.coverage.filter((entry) => entry.leaning !== "" && entry.basis && safeUrl(entry.basis));
+        const summary = document.getElementById("orientation-summary");
+        if (documented.length < 3) {
+          summary.textContent = `Orientación: −5 (izquierda) a +5 (derecha), con matices. Hay ${documented.length} clasificaciones con referencia documentada; se necesitan al menos tres para resumir esta muestra. No representa a todo el ecosistema mediático.`;
+          return;
+        }
+        const average = documented.reduce((sum, entry) => sum + Number(entry.leaning), 0) / documented.length;
+        const rounded = Math.round(average);
+        const values = documented.map((entry) => Number(entry.leaning));
+        const minimum = Math.min(...values);
+        const maximum = Math.max(...values);
+        summary.textContent = `Promedio aritmético de la muestra: ${leaningLabel(String(rounded))} (${average > 0 ? "+" : ""}${average.toFixed(1)} / 5; n=${documented.length}). Rango observado: ${minimum > 0 ? "+" : ""}${minimum} a ${maximum > 0 ? "+" : ""}${maximum}. Un promedio centrado no implica consenso: revisa las posiciones y coberturas individuales. No mide la veracidad ni representa a todo el ecosistema mediático.`;
+      }
+
+      function renderAssessment() {
+        const summary = document.getElementById("assessment-summary");
+        const assessment = readState().assessment;
+        summary.replaceChildren();
+        const status = document.createElement("p");
+        status.textContent = `Conclusión provisional: ${assessment.status}.`;
+        summary.append(status);
+        if (assessment.labels.length) {
+          const labels = document.createElement("p");
+          labels.textContent = `Recursos señalados (a revisar): ${assessment.labels.join(", ")}.`;
+          summary.append(labels);
+        }
+        if (assessment.notes.trim()) {
+          const notes = document.createElement("p");
+          notes.textContent = `Justificación: ${assessment.notes.trim()}`;
+          summary.append(notes);
+        }
+        if (safeUrl(assessment.evidence)) {
+          const evidence = document.createElement("p");
+          evidence.append("Evidencia principal: ");
+          appendLink(evidence, assessment.evidence, "Abrir fuente");
+          summary.append(evidence);
+        }
+      }
+
+      function renderResearch() {
+        renderOrigins();
+        renderCoverage();
+        renderAssessment();
+      }
+
       function renderResult() {
         const claim = fields.claim.value.trim();
         if (!claim) {
@@ -783,6 +1119,7 @@
           : "Punto de partida para la revisión editorial.";
         resultCard.classList.add("visible");
         updateProgress();
+        renderResearch();
       }
 
       function showNotice(message) {
@@ -796,21 +1133,107 @@
         try {
           const saved = localStorage.getItem(storageKey);
           if (!saved) return;
-          const state = JSON.parse(saved);
+          const savedState = JSON.parse(saved);
+          if (!savedState || typeof savedState !== "object" || Array.isArray(savedState)) throw new Error("Formato de borrador no válido");
           for (const [key, element] of Object.entries(fields)) {
-            if (typeof state[key] === "string") element.value = state[key];
+            if (typeof savedState[key] === "string") element.value = savedState[key];
           }
           for (const checkbox of checkboxes) {
-            checkbox.checked = Boolean(state.checks && state.checks[checkbox.dataset.check]);
+            checkbox.checked = Boolean(savedState.checks && savedState.checks[checkbox.dataset.check]);
           }
+          state.origins = Array.isArray(savedState.origins) ? savedState.origins.filter((entry) =>
+            entry && typeof entry.source === "string" && typeof entry.kind === "string" &&
+            typeof entry.date === "string" && typeof entry.notes === "string" && safeUrl(entry.url)
+          ) : [];
+          state.coverage = Array.isArray(savedState.coverage) ? savedState.coverage.filter((entry) =>
+            entry && typeof entry.outlet === "string" && typeof entry.url === "string" &&
+            typeof entry.relation === "string" && typeof entry.date === "string" &&
+            typeof entry.notes === "string" && typeof entry.leaning === "string" &&
+            typeof entry.basis === "string" && safeUrl(entry.url) &&
+            (entry.basis === "" || safeUrl(entry.basis))
+          ) : [];
+          const assessment = savedState.assessment && typeof savedState.assessment === "object" ? savedState.assessment : {};
+          assessmentForm.elements.status.value = typeof assessment.status === "string"
+            ? assessment.status
+            : "Sin evaluar";
+          assessmentForm.elements.evidence.value = typeof assessment.evidence === "string" && safeUrl(assessment.evidence)
+            ? assessment.evidence
+            : "";
+          assessmentForm.elements.notes.value = typeof assessment.notes === "string" ? assessment.notes : "";
+          const savedLabels = Array.isArray(assessment.labels) ? assessment.labels : [];
+          assessmentForm.querySelectorAll('input[name="labels"]').forEach((input) => {
+            input.checked = savedLabels.includes(input.value);
+          });
           renderResult();
           updateProgress();
           document.getElementById("save-status").textContent = "Borrador recuperado de este dispositivo.";
         } catch (error) {
-          localStorage.removeItem(storageKey);
           document.getElementById("save-status").textContent = "No se pudo recuperar el borrador guardado.";
         }
       }
+
+      function registerEntryForm(formId, collection, successMessage) {
+        const entryForm = document.getElementById(formId);
+        entryForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          if (!entryForm.reportValidity()) return;
+          const entry = Object.fromEntries(new FormData(entryForm));
+          state[collection].push(entry);
+          entryForm.reset();
+          renderResearch();
+          saveState();
+          showNotice(successMessage);
+        });
+      }
+
+      registerEntryForm("origin-form", "origins", "Publicación añadida al rastro.");
+      registerEntryForm("coverage-form", "coverage", "Artículo añadido a la comparación.");
+
+      assessmentForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!assessmentForm.reportValidity()) return;
+        renderAssessment();
+        saveState();
+        showNotice("Evaluación editorial guardada.");
+      });
+
+      assessmentForm.addEventListener("input", () => {
+        renderAssessment();
+        saveState();
+      });
+
+      assessmentForm.addEventListener("change", (event) => {
+        if (event.target.name === "labels") {
+          const choices = Array.from(assessmentForm.querySelectorAll('input[name="labels"]'));
+          const none = choices.find((input) => input.value === "No se identifica un recurso de esta lista");
+          if (event.target === none && none.checked) {
+            choices.filter((input) => input !== none).forEach((input) => { input.checked = false; });
+          } else if (event.target.checked && none.checked) {
+            none.checked = false;
+          }
+        }
+        renderAssessment();
+        saveState();
+      });
+
+      document.querySelectorAll("[data-search]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const claim = fields.claim.value.trim();
+          if (!claim) {
+            fields.claim.focus();
+            showNotice("Primero escribe la afirmación que quieres investigar.");
+            return;
+          }
+          const search = new URL("https://www.google.com/search");
+          const query = button.dataset.search === "social"
+            ? `"${claim}" (site:x.com OR site:facebook.com OR site:instagram.com OR site:tiktok.com)`
+            : button.dataset.search === "coverage"
+              ? `"${claim}" noticias medios`
+              : `"${claim}" origen`;
+          search.searchParams.set("q", query);
+          window.open(search.href, "_blank", "noopener,noreferrer");
+        });
+      });
 
       form.addEventListener("input", () => {
         saveState();
@@ -838,19 +1261,37 @@
       });
 
       document.getElementById("copy-button").addEventListener("click", async () => {
-        const state = readState();
+        const report = readState();
         const lines = [
           "FICHA DE VERIFICACIÓN — REDACCIÓN",
-          `Afirmación: ${state.claim.trim()}`,
-          state.url ? `Enlace: ${state.url}` : "",
-          state.platform ? `Plataforma: ${state.platform}` : "",
-          state.date ? `Fecha: ${state.date}` : "",
-          state.context.trim() ? `Contexto / primeras pistas: ${state.context.trim()}` : "",
+          `Afirmación: ${report.claim.trim()}`,
+          report.url ? `Enlace: ${report.url}` : "",
+          report.platform ? `Plataforma: ${report.platform}` : "",
+          report.date ? `Fecha: ${report.date}` : "",
+          report.context.trim() ? `Contexto / primeras pistas: ${report.context.trim()}` : "",
+          "",
+          "RASTRO DOCUMENTADO",
+          ...(report.origins.length
+            ? report.origins.map((entry) => `${entry.date || "Fecha no registrada"} · ${entry.kind} · ${entry.source} · ${entry.url}${entry.notes ? ` — ${entry.notes}` : ""}`)
+            : ["Sin publicaciones documentadas."]),
+          "",
+          "COMPARACIÓN ENTRE MEDIOS",
+          ...(report.coverage.length
+            ? report.coverage.map((entry) => `${entry.outlet} · ${entry.relation} · orientación: ${leaningLabel(entry.leaning)} · ${entry.url}${entry.notes ? ` — ${entry.notes}` : ""}${entry.basis ? ` (base: ${entry.basis})` : ""}`)
+            : ["Sin artículos comparados."]),
+          "",
+          `Tendencia descriptiva: ${document.getElementById("orientation-summary").textContent}`,
+          "",
+          "EVALUACIÓN EDITORIAL",
+          `Estado: ${report.assessment.status}`,
+          `Posibles sesgos, errores o falacias: ${report.assessment.labels.length ? report.assessment.labels.join(", ") : "No registrados"}`,
+          report.assessment.evidence ? `Evidencia principal: ${report.assessment.evidence}` : "",
+          report.assessment.notes ? `Justificación: ${report.assessment.notes}` : "",
           "",
           "LISTA DE COMPROBACIÓN",
           ...checkboxes.map((checkbox) => `${checkbox.checked ? "[x]" : "[ ]"} ${checkbox.querySelector("span").textContent}`),
           "",
-          "Estado: pendiente de verificación. Esta ficha no determina automáticamente la veracidad."
+          "Nota: registro editorial basado en fuentes añadidas por el usuario; no es una determinación automática de veracidad ni de intención."
         ].filter((line) => line !== undefined);
         try {
           await navigator.clipboard.writeText(lines.join("\n"));
@@ -863,11 +1304,23 @@
       document.getElementById("clear-button").addEventListener("click", () => {
         if (!window.confirm("¿Limpiar el borrador y borrar la ficha guardada en este dispositivo?")) return;
         form.reset();
+        document.getElementById("origin-form").reset();
+        document.getElementById("coverage-form").reset();
+        assessmentForm.reset();
+        state.origins = [];
+        state.coverage = [];
         checkboxes.forEach((checkbox) => { checkbox.checked = false; });
-        localStorage.removeItem(storageKey);
+        try {
+          localStorage.removeItem(storageKey);
+        } catch (error) {
+          document.getElementById("save-status").textContent = "Ficha vaciada, pero no se pudo borrar el almacenamiento local.";
+        }
         resultCard.classList.remove("visible");
         updateProgress();
-        document.getElementById("save-status").textContent = "Los cambios se guardan automáticamente.";
+        renderResearch();
+        if (document.getElementById("save-status").textContent !== "Ficha vaciada, pero no se pudo borrar el almacenamiento local.") {
+          document.getElementById("save-status").textContent = "Los cambios se guardan automáticamente.";
+        }
         fields.claim.focus();
         showNotice("Borrador eliminado.");
       });
